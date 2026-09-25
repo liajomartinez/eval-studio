@@ -83,14 +83,38 @@ Evaluated in this priority order (highest first):
    `scale_readiness` is `FAIL` or `UNKNOWN`.
 5. **READY** — everything else (all criteria `PASS`).
 
-> **Open question, flagged for later, not resolved now:** for the
-> `performance` criterion specifically, should "meets the bar" be a
-> deterministic numeric threshold checked in code, or a judgment call the
-> model reasons about? The right bar plausibly varies by use case (a
-> benefits-eligibility screener and a chatbot triage tool don't share a bar),
-> which argues for judgment — but a judgment call is harder to audit and
-> reproduce than a number. Worth writing up as an explicit trade-off in the
-> project's final documentation.
+### Decided: performance is judged, not thresholded
+
+**Decision:** `performance` is a model judgment call, like the other four
+criteria — not a hardcoded numeric threshold. The model must state, as part
+of its `explanation`, what bar it judged the evidence against and why.
+
+**Why:**
+
+- **Consistency.** The other four criteria (`bias_fairness`,
+  `human_oversight`, `transparency`, `scale_readiness`) have no numeric
+  threshold to check against — they're already reasoned judgment calls.
+  Making `performance` uniquely deterministic while everything else is
+  judgment-based is an inconsistent design with no real justification.
+- **A hardcoded number has nothing to compare against for some real pilots.**
+  The SyRI golden example (`golden_examples.py`) is the concrete case that
+  ruled this out: its performance evidence is Dutch investigative reporting
+  that zero fraud cases were detected across the completed analyses — not a
+  percentage, an AUC, or any other clean metric a threshold check could read.
+  Pilots also report wildly different metrics (accuracy, AUC, F1, false
+  positive rate, or plain prose) — one fixed number can't be compared
+  meaningfully across all of them, and reliably extracting "the number" from
+  free text is itself a hard, error-prone problem, not an easier one.
+- **The right bar plausibly varies by use case anyway** (a fraud detector and
+  a diagnostic tool don't need the same accuracy floor), which argues for
+  judgment over a single fixed number regardless of the extraction problem.
+
+**Trade-off accepted:** this is less mechanically reproducible than a
+threshold check — the same input isn't guaranteed byte-identical output
+across runs. What keeps it from being an unaccountable black box is the same
+rule applied everywhere else in this spec: the model must ground its call in
+`evidence` and explain its reasoning, including the bar it applied, so the
+verdict is checkable and arguable rather than just asserted.
 
 ## Output shape (draft)
 
