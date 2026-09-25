@@ -64,6 +64,35 @@ This makes the reasoning checkable against the source, not just asserted —
 which matters later when we run independent grading passes and need to
 diagnose disagreements.
 
+### UNKNOWN vs. a flagged-but-unconfirmable FAIL, on hard-required criteria
+
+Not every case where a criterion "can't be confirmed" is a genuine UNKNOWN.
+Two situations look similar but aren't:
+
+- **Genuine silence** — no concern is raised, nothing is addressed either
+  way. This is UNKNOWN. Example: SyRI's `human_oversight` — no source found
+  discusses any review or appeal process at all, for or against.
+- **A flagged, unconfirmable risk, where the unconfirmability is caused by
+  the evaluated party's own non-disclosure.** On `performance` or
+  `bias_fairness` specifically (the hard-required criteria), this defaults
+  to **FAIL**, not UNKNOWN. Example: SyRI's `bias_fairness` — a court
+  identified a specific, real risk of disparate impact, and could not
+  confirm it only because the government withheld how the model worked.
+
+The reasoning: on a hard-required criterion, the burden sits on the pilot to
+demonstrate it's fair, not on an outside evaluator to prove harm occurred
+after the fact. If a flagged, specific risk that the pilot itself made
+unverifiable defaulted to a neutral UNKNOWN, that would let an agency dodge
+a fairness failure simply by not disclosing its methodology — rewarding
+opacity instead of penalizing it. UNKNOWN is reserved for cases where
+nothing was raised at all, not for cases where something was raised and the
+evaluated party is the reason it couldn't be settled.
+
+This distinction does not apply to the soft-required criteria
+(`human_oversight`, `transparency`, `scale_readiness`), where UNKNOWN
+already routes to CONDITIONAL rather than a full abstain — there's less at
+stake in getting the FAIL/UNKNOWN line exactly right there.
+
 ## Overall verdict logic
 
 Evaluated in this priority order (highest first):
@@ -115,6 +144,31 @@ across runs. What keeps it from being an unaccountable black box is the same
 rule applied everywhere else in this spec: the model must ground its call in
 `evidence` and explain its reasoning, including the bar it applied, so the
 verdict is checkable and arguable rather than just asserted.
+
+### Sample size vs. a genuine FAIL, on performance specifically
+
+A performance judgment resting on an observed result (e.g. zero detections,
+a reported rate) from a sample too small to distinguish a real effect from
+noise should be labeled **UNKNOWN**, even if the observed result itself is
+negative. **FAIL** is reserved for either a large-enough sample showing a
+consistent result, or a clearly missed explicit benchmark.
+
+**Example:** SyRI's `performance` — only 2 of 5 planned analyses were ever
+completed, and those 2 detected zero fraud cases. That's too small a sample
+to treat "zero" as a proven failure to perform; it's UNKNOWN, not FAIL. This
+was a real, live disagreement between a hand-reviewed judgment and the
+model's first output on this exact case (the model initially called it
+FAIL, reasoning only "it ran, and the result was zero," without weighing
+sample size at all) — which is why this rule is written down here and also
+built into the prompt in `verdict.py`, not left as an implicit standard the
+model has no way to know to apply.
+
+This is a distinct judgment from `scale_readiness`, even though both draw on
+the same "2 of 5 completed" fact for SyRI: `performance` asks how much
+confidence the observed result deserves, while `scale_readiness` asks
+whether the pilot was ever tested at the scale its own mandate anticipated.
+The same fact can UNKNOWN one criterion and FAIL the other — that's not a
+duplication bug, it's two different questions being asked of one fact.
 
 ## Output shape (draft)
 

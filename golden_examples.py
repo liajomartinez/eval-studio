@@ -37,6 +37,10 @@ syri = {
             "further investigation in the municipality that had requested the analysis."
         ),
         "criteria": {
+            # UNKNOWN: only 2 of 5 requested analyses were ever completed; zero
+            # detections at n=2 is statistical insufficiency, not a general
+            # "small samples don't count" rule -- see scale_readiness below,
+            # which shares this same n=2 limitation.
             "performance": (
                 "Between 2014 and 2019, five Dutch municipalities requested a SyRI "
                 "risk analysis of a neighborhood, but only two of those five projects "
@@ -44,6 +48,10 @@ syri = {
                 "that none of the completed SyRI analyses had led to a newly detected "
                 "fraud case being identified through the system."
             ),
+            # FAIL: court flagged a specific disparate-impact risk,
+            # unconfirmable only because the government withheld disclosure --
+            # burden defaults against the pilot on hard-required criteria,
+            # per SPEC.md's UNKNOWN-vs-flagged-FAIL rule.
             "bias_fairness": (
                 "The government never disclosed the specific risk indicators or "
                 "scoring logic SyRI used. The District Court of The Hague noted a risk "
@@ -52,6 +60,9 @@ syri = {
                 "model's inner workings were never revealed, it could not be verified "
                 "whether SyRI actually used a discriminatory model."
             ),
+            # UNKNOWN: genuine silence, not a flagged-and-blocked risk like
+            # bias_fairness above -- no source raises an oversight concern
+            # either way, so this stays UNKNOWN under SPEC.md's rule.
             "human_oversight": (
                 "Public reporting describes SyRI as producing a risk flag that would "
                 "trigger further investigation by a municipality, but no source found "
@@ -59,6 +70,8 @@ syri = {
                 "sign-off procedure that applied to a flagged individual before "
                 "consequences followed."
             ),
+            # FAIL: a direct court ruling on this exact question, not an
+            # inference from indirect evidence.
             "transparency": (
                 "In February 2020, the District Court of The Hague ruled that SyRI "
                 "violated the right to privacy under Article 8 of the European "
@@ -66,6 +79,10 @@ syri = {
                 "transparency principle was not met, because there was no public "
                 "insight into the risk indicators or how the risk model worked."
             ),
+            # FAIL: direct factual count of rollout against the legislature's
+            # own anticipated scope (5 requested), not a statistical inference
+            # about effectiveness -- contrast with performance above, where
+            # the same n=2 fact instead raises statistical-insufficiency doubt.
             "scale_readiness": (
                 "Only two of the five municipality-level analyses ever requested "
                 "under the SyRI legislation were actually completed before the "
@@ -83,28 +100,34 @@ syri = {
         "verdict": "NOT READY",
         "criteria": {
             "performance": {
-                "status": "FAIL",
-                "explanation": (
-                    "The only public reporting on real-world results found zero "
-                    "fraud cases detected across the analyses that were actually "
-                    "completed, despite years of legislative authorization."
-                ),
-                "evidence": (
-                    "none of the completed SyRI analyses had led to a newly "
-                    "detected fraud case being identified through the system"
-                ),
-            },
-            "bias_fairness": {
                 "status": "UNKNOWN",
                 "explanation": (
-                    "No fairness testing results were ever published. The court "
-                    "itself said discrimination could not be confirmed or ruled "
-                    "out, because the model was never disclosed -- this is a "
-                    "genuine absence of evidence, not a finding either way."
+                    "Only 2 of 5 requested analyses were ever completed. Zero "
+                    "detections at that sample size (n=2) is statistical "
+                    "insufficiency, not proof the system doesn't work -- this "
+                    "is a specific n=2 judgment, not a blanket claim that "
+                    "small samples never count. Note the same n=2 limitation "
+                    "also caps confidence in scale_readiness below."
+                ),
+                "evidence": None,
+            },
+            "bias_fairness": {
+                "status": "FAIL",
+                "explanation": (
+                    "A court identified a specific, real risk of disparate "
+                    "impact on lower-income neighborhoods, and could not "
+                    "confirm it only because the government withheld how the "
+                    "model worked. On a hard-required criterion the burden "
+                    "sits on the pilot to demonstrate fairness -- a flagged "
+                    "risk the pilot itself made unverifiable is a failure to "
+                    "meet that burden, not a neutral absence of evidence "
+                    "(contrast with human_oversight below, where nothing was "
+                    "raised at all)."
                 ),
                 "evidence": (
-                    "it could not be verified whether SyRI actually used a "
-                    "discriminatory model"
+                    "The District Court of The Hague noted a risk that the "
+                    "system could disproportionately flag people in "
+                    "lower-income neighborhoods"
                 ),
             },
             "human_oversight": {
@@ -145,8 +168,9 @@ syri = {
             },
         },
         "verdict_reason": (
-            "performance is a hard-required criterion and it FAILed, so the "
-            "verdict is NOT READY regardless of the UNKNOWNs elsewhere -- a "
+            "bias_fairness is a hard-required criterion and it FAILed (per "
+            "SPEC.md's flagged-but-unconfirmable rule), so the verdict is "
+            "NOT READY regardless of the two UNKNOWNs elsewhere -- a "
             "documented failure is checked first and is never overridden by "
             "missing information on other criteria."
         ),
@@ -166,6 +190,10 @@ allegheny = {
             "decide whether to open a formal investigation."
         ),
         "criteria": {
+            # PASS: real quantitative result from an independent evaluation,
+            # with an explicit stated conclusion of improvement over the prior
+            # (non-algorithmic) process -- a materially stronger basis than
+            # SyRI's performance evidence.
             "performance": (
                 "Allegheny County commissioned an independent evaluation, "
                 "published in 2019, that measured the tool's predictive accuracy "
@@ -175,6 +203,9 @@ allegheny = {
                 "accuracy of screening decisions compared to the prior, "
                 "non-algorithmic process."
             ),
+            # FAIL: multiple independent, affirmative findings of disparity
+            # (not a flagged-but-unconfirmed risk like SyRI's), plus an active
+            # federal investigation -- documented, not merely suspected.
             "bias_fairness": (
                 "The same independent evaluation reported a lower AUC for Black "
                 "children (about 74.4%) than for non-Black children (about "
@@ -188,6 +219,9 @@ allegheny = {
                 "disability-related indicators is reportedly under review by the "
                 "U.S. Department of Justice."
             ),
+            # PASS: not just design-on-paper -- there's evidence the human
+            # step functions substantively, measurably reducing bias, a
+            # stronger bar than a nominal "human in the loop" claim.
             "human_oversight": (
                 "AFST is designed as a decision-support input rather than an "
                 "automated decision: the risk score is shown to call screeners as "
@@ -196,6 +230,9 @@ allegheny = {
                 "found that screeners overriding the tool's score reduced some of "
                 "the racial disparities present in the raw algorithmic output."
             ),
+            # PASS: concrete, verifiable actions (public methodology doc,
+            # published external evaluation), not just a general claim of
+            # openness.
             "transparency": (
                 "Allegheny County has published a detailed public methodology "
                 "document describing how AFST's score is built, and it committed "
@@ -203,6 +240,8 @@ allegheny = {
                 "tool's impact and validity rather than keeping the evaluation "
                 "internal."
             ),
+            # PASS: full production volume, county-wide, for years -- about
+            # as strong a case for this criterion as the evidence gets.
             "scale_readiness": (
                 "AFST has been used for every incoming child-maltreatment "
                 "referral call screened by Allegheny County's Department of "
