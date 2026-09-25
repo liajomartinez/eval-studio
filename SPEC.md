@@ -68,14 +68,17 @@ diagnose disagreements.
 
 Evaluated in this priority order (highest first):
 
-1. **ABSTAIN** if 3 or more of the 5 criteria are `UNKNOWN`, regardless of
-   which ones — at that point there isn't enough input to judge fairly at
-   all.
-2. **ABSTAIN** if `performance` or `bias_fairness` is `UNKNOWN` (and rule 1
-   didn't already fire) — can't judge a hard-required criterion without
+1. **NOT READY** if `performance` or `bias_fairness` is `FAIL` — hard fail,
+   no exceptions. Checked first: a documented failure must never be
+   overridden by missing documentation elsewhere. If thin evidence on other
+   criteria could turn a known failure into an abstain, that's a bad
+   incentive — it would reward incomplete pilot writeups.
+2. **ABSTAIN** if 3 or more of the 5 criteria are `UNKNOWN` (and rule 1
+   didn't already fire) — at that point there isn't enough input to judge
+   fairly at all.
+3. **ABSTAIN** if `performance` or `bias_fairness` is `UNKNOWN` (and neither
+   rule above fired) — can't judge a hard-required criterion without
    evidence.
-3. **NOT READY** if `performance` or `bias_fairness` is `FAIL` — hard fail,
-   no exceptions.
 4. **CONDITIONAL** if any of `human_oversight`, `transparency`, or
    `scale_readiness` is `FAIL` or `UNKNOWN`.
 5. **READY** — everything else (all criteria `PASS`).
@@ -108,4 +111,4 @@ result = {
 
 Test cases sourced from real, public AI pilots, each with a hand-written
 expected verdict + per-criterion breakdown. These are what we check the
-tool's actual output against — see `golden_examples/`.
+tool's actual output against — see `golden_examples.py`.
