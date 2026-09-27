@@ -342,3 +342,118 @@ allegheny = {
 # The list every other part of the project will loop over when checking the
 # tool's answers against ours.
 EXAMPLES = [syri, allegheny]
+
+# TODO: future golden example, ABSTAIN path (no coverage yet).
+#
+# IRS AI-assisted National Research Program (NRP) audit-case-selection pilot
+# (piloted since the 2019 filing season: 4,000 returns selected via the new
+# AI-informed process alongside an equal share via traditional selection).
+#
+# Sourcing so far stopped after a quick performance check, per SPEC.md's
+# rule that a hard-required criterion (performance/bias_fairness) landing on
+# UNKNOWN triggers ABSTAIN outright -- no need to source the other 4
+# criteria to know this pilot's verdict path, so they were never built out.
+#
+# performance -> UNKNOWN. GAO's report on this pilot (GAO-24-106449)
+# recommends IRS evaluate the redesigned process using "the number of
+# audits resulting in no change to taxes due and the magnitude of tax
+# change" -- a recommendation to START measuring impact, meaning that
+# evaluation had not been done as of the report. No source found (GAO
+# report, FedScoop, Money.com coverage) contains a quantified yield/
+# accuracy/no-change-rate comparison between the AI-assisted and
+# traditional selection methods for this pilot.
+#
+# Note for whoever builds this out later: a well-documented racial-disparity
+# finding exists for IRS audit selection (2023 Stanford/IRS study; a
+# separate GAO report on risk scores varying by sex) -- but that evidence is
+# about the OPERATIONAL DIF/EITC workload-selection systems (the Dependent
+# Database), which multiple sources describe as organizationally separate
+# from this NRP research-sampling pilot. Don't reuse it here without
+# confirming it actually applies to the NRP AI process specifically, not
+# just the same agency's other audit-selection algorithm.
+#
+# Sources so far:
+# https://www.gao.gov/products/gao-24-106449
+# https://fedscoop.com/irs-ai-audit-models-gao-report/
+# https://money.com/irs-ai-audits/
+
+# WIP: sourced, not yet hand-labeled (evidence only -- no "expected" block
+# yet). Pre-RV-2.0 model only: the 2017-deployed model, bounded strictly to
+# evidence describing that version, not the later RV 2.0 update or its 2025
+# national rollout.
+reach_vet_wip = {
+    "name": "va_reach_vet_original_model",
+    "pilot": {
+        "pilot_name": "REACH VET (original model, deployed 2017)",
+        "agency": "Veterans Health Administration (VA)",
+        "summary": (
+            "REACH VET runs a predictive model monthly on VHA patients seen "
+            "in the past 24 months, scoring suicide risk. Patients in the "
+            "top 0.1% at each facility are flagged on a clinical dashboard "
+            "for a mandated care-coordinator and provider review."
+        ),
+        "criteria": {
+            "performance": (
+                "The model-development paper (McCarthy et al. 2015, "
+                "American Journal of Public Health 105(9):1935-1942, "
+                "published before the 2017 national rollout) reported: "
+                "'suicide rates were 82 and 60 times greater than the rate "
+                "in the overall sample in the highest 0.01% stratum for "
+                "calculated risk for the development and validation "
+                "samples, respectively.' A separate 2025 study evaluating "
+                "the same original (pre-RV-2.0) model's real-world accuracy, "
+                "using 2018 VHA patient data and 'the current REACH VET "
+                "methodology... determined in 2017,' found: 'The PPV was "
+                "0.00054 (95% CI: 0.00034 to 0.00087), indicating that very "
+                "few (0.054%) of the patients in the high-risk group died "
+                "by suicide.'"
+            ),
+            "bias_fairness": (
+                "No source found -- the 2015 development paper, a 2022 GAO "
+                "report on the program (GAO-22-105165), and subsequent "
+                "program-evaluation literature -- describes any subgroup "
+                "(race, sex, age) fairness or disparity testing for this "
+                "original model. Subgroup-consistency testing only appears "
+                "in the literature once the later RV 2.0 model is "
+                "introduced, which is out of bounds for this evidence set."
+            ),
+            "human_oversight": (
+                "'REACH VET coordinators... are responsible for reviewing "
+                "the dashboard and notifying the VHA provider who has "
+                "worked most closely with the patient,' and 'providers are "
+                "responsible for reviewing each patient's care plan, "
+                "contacting the patient by phone, and when appropriate, "
+                "making changes in care collaboratively with the patient.' "
+                "GAO-22-105165 confirms: 'clinicians are expected to "
+                "evaluate each identified veteran's risk for suicide, "
+                "determine appropriate treatment approaches, and contact "
+                "the veteran to discuss options for care.'"
+            ),
+            "transparency": (
+                "The model's methodology and validation results were "
+                "published in a peer-reviewed journal (McCarthy et al. "
+                "2015, American Journal of Public Health) prior to the "
+                "2017 national rollout. GAO-22-105165 (2022) separately "
+                "describes the deployed program only in generic terms: "
+                "'The REACH VET program model uses 61 variables included "
+                "in each veteran's VHA electronic health record.'"
+            ),
+            "scale_readiness": (
+                "'Rapid phased national implementation of REACH VET "
+                "started in November 2016, when the predictive model "
+                "identified eight veterans with the highest risk scores at "
+                "each facility. By February 2017, facilities received the "
+                "names of all veterans in the top 0.1% risk tier at their "
+                "facility,' with full national implementation in March "
+                "2017."
+            ),
+        },
+        "sources": [
+            "https://pmc.ncbi.nlm.nih.gov/articles/PMC4539821/",
+            "https://pmc.ncbi.nlm.nih.gov/articles/PMC12535588/",
+            "https://www.gao.gov/assets/gao-22-105165.pdf",
+            "https://psychiatryonline.org/doi/full/10.1176/appi.ps.202100629",
+            "https://pmc.ncbi.nlm.nih.gov/articles/PMC11809762/",
+        ],
+    },
+}

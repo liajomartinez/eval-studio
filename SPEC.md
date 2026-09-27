@@ -170,6 +170,31 @@ whether the pilot was ever tested at the scale its own mandate anticipated.
 The same fact can UNKNOWN one criterion and FAIL the other — that's not a
 duplication bug, it's two different questions being asked of one fact.
 
+### Evidence timing: same system vs. a different system
+
+A golden example's evidence can be dated later than the pilot decision it's
+judging, as long as it describes **the same, unmodified system** — not a
+system that was later changed. Evidence about a subsequently modified or
+different version is out of scope, regardless of how directly relevant it
+looks.
+
+**In scope:** SyRI's court ruling (2020) evaluated years of the same
+system's actual real-world operation, using analysis that wasn't available
+in real time when SyRI first launched. REACH VET's `performance` evidence
+similarly draws on a 2025 retrospective study of real-world accuracy — but
+that study explicitly re-scored patients using "the current REACH VET
+methodology... determined in 2017," i.e. the same original model, just
+measured later. Both are fair game.
+
+**Out of scope:** REACH VET's later "RV 2.0" update is a different,
+structurally changed system (retrained model, added subgroup-consistency
+testing). Using RV 2.0's evidence to judge the original 2017 rollout
+decision would mean judging that decision on facts about something that
+didn't exist yet — that's not "evidence surfacing later," it's evidence
+about a different pilot. This is why REACH VET's golden example (see
+`golden_examples.py`) is bounded strictly to pre-RV-2.0 sources, even where
+RV 2.0's evidence would have been more flattering.
+
 ## Output shape (draft)
 
 ```python
